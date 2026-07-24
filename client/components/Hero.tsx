@@ -2,12 +2,17 @@ import { motion } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
 import { useMousePosition } from "../hooks/useMousePosition";
 import { useNavigate } from "react-router-dom";
-import { audiobooks } from "../data/audiobooks";
+import { travelAdventureBooks, homeWellnessBooks } from "../data/cdnAudiobooks";
 
 export function Hero() {
   const { x, y } = useMousePosition();
   const navigate = useNavigate();
-  const heroBooks = audiobooks.slice(0, 3);
+  // Use travel / wellness covers — avoid tech catalog covers like Excel
+  const heroBooks = [
+    travelAdventureBooks[0],
+    homeWellnessBooks[0],
+    travelAdventureBooks[1],
+  ].filter(Boolean);
 
   const containerVariants = {
     hidden: { opacity: 0 },

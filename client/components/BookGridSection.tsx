@@ -76,7 +76,7 @@ export function BookGridSection({
               whileHover={{ y: -10 }}
             >
               <div
-                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-white/10 p-4 h-full backdrop-blur-sm hover:border-neon-blue/50 transition-colors cursor-pointer"
+                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-white/10 p-4 h-full flex flex-col backdrop-blur-sm hover:border-neon-blue/50 transition-colors cursor-pointer"
                 onClick={() => void playBook(book)}
               >
                 <motion.div
@@ -108,21 +108,22 @@ export function BookGridSection({
                   </motion.div>
                 </div>
 
-                <div className="relative z-10 space-y-3">
-                  <h3 className="text-sm sm:text-lg font-grotesk font-bold text-white line-clamp-2">
+                <div className="relative z-10 flex flex-col flex-1 space-y-3">
+                  <h3 className="text-sm sm:text-lg font-grotesk font-bold text-white line-clamp-2 leading-snug min-h-[2.75rem] sm:min-h-[3.5rem]">
                     {book.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-400 font-poppins">{book.author}</p>
+                  <p className="text-xs sm:text-sm text-gray-400 font-poppins line-clamp-1 min-h-[1.25rem]">{book.author}</p>
 
-                  <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                  <div className="mt-auto flex items-center justify-between pt-3 border-t border-white/10">
                     <span className="text-xs text-gray-400 font-poppins">Duration</span>
                     <AudioDurationLabel
                       src={book.audio}
+                      fallback={book.duration}
                       className="text-xs text-neon-blue font-poppins font-medium"
                     />
                   </div>
 
-                  <div className="pt-2 inline-block px-3 py-1 rounded-full bg-gradient-to-r from-neon-blue/20 to-purple-500/20 border border-neon-blue/30">
+                  <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-neon-blue/20 to-purple-500/20 border border-neon-blue/30">
                     <span className="text-xs text-neon-blue font-poppins font-medium">
                       {book.category}
                     </span>

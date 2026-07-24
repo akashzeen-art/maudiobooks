@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 /** Format seconds as e.g. `1h 05m` or `42m 10s`. */
 export function formatAudioDuration(seconds: number): string {
-  if (!Number.isFinite(seconds) || seconds <= 0) return "—";
+  if (!Number.isFinite(seconds) || seconds <= 0) return "";
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.floor(seconds % 60);
@@ -11,43 +11,59 @@ export function formatAudioDuration(seconds: number): string {
   return `${s}s`;
 }
 
-/** Load actual duration from an audio URL via metadata. */
-export function useAudioDuration(src: string) {
+/** Load actual duration from an audio URL via metadata; use fallback while loading/on error. */
+export function useAudioDuration(src: string, fallback = "") {
   const [duration, setDuration] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(src));
 
   useEffect(() => {
+    if (!src) {
+      setLoading(false);
+      setDuration(null);
+      return;
+    }
+
     let cancelled = false;
     setLoading(true);
     setDuration(null);
 
     const audio = new Audio();
     audio.preload = "metadata";
+    // Helps some CDNs expose duration without full download
+    audio.crossOrigin = "anonymous";
+
+    const finish = (seconds: number | null) => {
+      if (cancelled) return;
+      setDuration(seconds);
+      setLoading(false);
+    };
 
     const onLoaded = () => {
-      if (cancelled) return;
       const d = audio.duration;
-      setDuration(Number.isFinite(d) ? d : null);
-      setLoading(false);
+      finish(Number.isFinite(d) && d > 0 ? d : null);
     };
 
-    const onError = () => {
-      if (cancelled) return;
-      setDuration(null);
-      setLoading(false);
-    };
+    const onError = () => finish(null);
 
     audio.addEventListener("loadedmetadata", onLoaded);
+    audio.addEventListener("durationchange", onLoaded);
     audio.addEventListener("error", onError);
     audio.src = src;
+    // Force metadata load in some browsers
+    audio.load();
 
     return () => {
       cancelled = true;
       audio.removeEventListener("loadedmetadata", onLoaded);
+      audio.removeEventListener("durationchange", onLoaded);
       audio.removeEventListener("error", onError);
-      audio.src = "";
+      audio.removeAttribute("src");
+      audio.load();
     };
   }, [src]);
 
-  return { duration, loading, label: duration != null ? formatAudioDuration(duration) : loading ? "…" : "—" };
+  const fromMeta = duration != null ? formatAudioDuration(duration) : "";
+  const label = fromMeta || fallback || (loading ? "…" : "—");
+
+  return { duration, loading, label };
 }

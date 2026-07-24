@@ -72,6 +72,7 @@ export function Trending() {
                       <div className="flex items-center mt-1">
                         <AudioDurationLabel
                           src={book.audio}
+                          fallback={book.duration}
                           className="text-neon-blue font-poppins text-xs"
                         />
                       </div>

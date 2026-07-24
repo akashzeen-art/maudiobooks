@@ -124,7 +124,7 @@ export default function Library() {
                 onClick={() => void playBook(book)}
                 whileHover={{ y: -5 }}
               >
-                <div className="relative overflow-hidden rounded-xl bg-gray-900 border border-white/5 hover:border-neon-blue/40 transition-colors">
+                <div className="relative overflow-hidden rounded-xl bg-gray-900 border border-white/5 hover:border-neon-blue/40 transition-colors h-full flex flex-col">
                   <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-purple-500 to-cyan-500">
                     <img
                       src={book.thumbnail}
@@ -140,12 +140,13 @@ export default function Library() {
                       </div>
                     </div>
                   </div>
-                  <div className="p-3">
-                    <h3 className="text-white font-grotesk font-bold text-xs line-clamp-2 mb-1">{book.title}</h3>
-                    <p className="text-gray-500 font-poppins text-xs line-clamp-1">{book.author}</p>
-                    <div className="flex items-center mt-2">
+                  <div className="p-3 flex flex-col flex-1">
+                    <h3 className="text-white font-grotesk font-bold text-xs line-clamp-2 leading-snug min-h-[2.5rem] mb-1">{book.title}</h3>
+                    <p className="text-gray-500 font-poppins text-xs line-clamp-1 min-h-[1rem]">{book.author}</p>
+                    <div className="flex items-center mt-auto pt-2">
                       <AudioDurationLabel
                         src={book.audio}
+                        fallback={book.duration}
                         className="text-xs text-neon-blue font-poppins"
                       />
                     </div>
