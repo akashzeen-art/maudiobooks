@@ -15,16 +15,17 @@ export function Footer() {
           transition={{ duration: 0.5 }}
         >
           <Link to="/">
-            <img src="/37.png" alt="GlobalAudio" className="h-9 w-auto" />
+            <img src="/logo.png" alt="maudiobooks" className="h-9 w-auto" />
           </Link>
 
           <div className="flex gap-6">
             <Link to="/" className="text-gray-400 hover:text-neon-blue font-poppins text-sm transition-colors">Home</Link>
             <Link to="/library" className="text-gray-400 hover:text-neon-blue font-poppins text-sm transition-colors">Library</Link>
+            <Link to="/account" className="text-gray-400 hover:text-neon-blue font-poppins text-sm transition-colors">My Account</Link>
           </div>
 
           <p className="text-gray-600 font-poppins text-sm">
-            © 2026 GlobalAudio. All rights reserved.
+            © 2026 maudiobooks. All rights reserved.
           </p>
         </motion.div>
       </div>

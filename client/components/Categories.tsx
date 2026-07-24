@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { categories, audiobooks } from "../data/audiobooks";
+import { categories } from "../data/audiobooks";
 
 export function Categories() {
   const navigate = useNavigate();
@@ -47,14 +47,13 @@ export function Categories() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
           {categories.map((category) => {
-            const count = audiobooks.filter((b) => b.category.toLowerCase() === category.id).length;
             return (
               <motion.div
                 key={category.id}
@@ -63,7 +62,7 @@ export function Categories() {
                 whileHover={{ y: -5 }}
                 onClick={() => navigate(`/library?category=${category.id}`)}
               >
-                <div className={`relative p-8 rounded-2xl h-48 bg-gradient-to-br ${category.color} overflow-hidden border border-white/10`}>
+                <div className={`relative p-4 sm:p-8 rounded-2xl h-36 sm:h-48 bg-gradient-to-br ${category.color} overflow-hidden border border-white/10`}>
                   <motion.div
                     className="absolute inset-0 opacity-30"
                     animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
@@ -76,10 +75,9 @@ export function Categories() {
                   <motion.div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                   <div className="relative z-10 h-full flex flex-col justify-between">
-                    <div className="text-5xl">{category.icon}</div>
+                    <div className="text-3xl sm:text-5xl">{category.icon}</div>
                     <div>
-                      <h3 className="text-2xl font-grotesk font-bold text-white mb-1">{category.name}</h3>
-                      <p className="text-white/70 font-poppins text-sm">{count} audiobooks</p>
+                      <h3 className="text-base sm:text-2xl font-grotesk font-bold text-white mb-1">{category.name}</h3>
                       <motion.div
                         className="h-1 w-12 bg-white rounded-full mt-2"
                         initial={{ width: 0 }}

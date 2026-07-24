@@ -1,18 +1,22 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Play, Star, X } from "lucide-react";
+import { Search, Play, X } from "lucide-react";
 import { audiobooks, categories } from "../data/audiobooks";
+import { cdnAudiobooks } from "../data/cdnAudiobooks";
 import { AudioPlayer } from "../components/AudioPlayer";
+import { AudioDurationLabel } from "../components/AudioDurationLabel";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { useSearchParams } from "react-router-dom";
+import { useGatedPlay } from "../hooks/useGatedPlay";
 
 export default function Library() {
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get("category") || "all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedBook, setSelectedBook] = useState<typeof audiobooks[0] | null>(null);
-  const shuffledBooks = useMemo(() => [...audiobooks].sort(() => Math.random() - 0.5), []);
+  const { selectedBook, playBook, closePlayer } = useGatedPlay();
+  const allBooks = useMemo(() => [...audiobooks, ...cdnAudiobooks], []);
+  const shuffledBooks = useMemo(() => [...allBooks].sort(() => Math.random() - 0.5), [allBooks]);
 
   useEffect(() => {
     const cat = searchParams.get("category");
@@ -83,11 +87,9 @@ export default function Library() {
                 : "bg-white/5 border border-white/10 text-gray-400 hover:border-neon-blue/50 hover:text-white"
             }`}
           >
-            All ({audiobooks.length})
+            All
           </button>
-          {categories.map((cat) => {
-            const count = audiobooks.filter((b) => b.category.toLowerCase() === cat.id).length;
-            return (
+          {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
@@ -97,10 +99,9 @@ export default function Library() {
                     : "bg-white/5 border border-white/10 text-gray-400 hover:border-neon-blue/50 hover:text-white"
                 }`}
               >
-                {cat.icon} {cat.name} ({count})
+                {cat.icon} {cat.name}
               </button>
-            );
-          })}
+          ))}
         </motion.div>
 
 {/* Books Grid */}
@@ -120,7 +121,7 @@ export default function Library() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.03 }}
-                onClick={() => setSelectedBook(book)}
+                onClick={() => void playBook(book)}
                 whileHover={{ y: -5 }}
               >
                 <div className="relative overflow-hidden rounded-xl bg-gray-900 border border-white/5 hover:border-neon-blue/40 transition-colors">
@@ -142,10 +143,11 @@ export default function Library() {
                   <div className="p-3">
                     <h3 className="text-white font-grotesk font-bold text-xs line-clamp-2 mb-1">{book.title}</h3>
                     <p className="text-gray-500 font-poppins text-xs line-clamp-1">{book.author}</p>
-                    <div className="flex items-center gap-1 mt-2">
-                      <Star size={10} className="fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs text-gray-400">{book.rating}</span>
-                      <span className="text-gray-600 text-xs ml-auto">{book.duration}</span>
+                    <div className="flex items-center mt-2">
+                      <AudioDurationLabel
+                        src={book.audio}
+                        className="text-xs text-neon-blue font-poppins"
+                      />
                     </div>
                   </div>
                 </div>
@@ -164,7 +166,7 @@ export default function Library() {
       <Footer />
 
       {selectedBook && (
-        <AudioPlayer book={selectedBook} onClose={() => setSelectedBook(null)} />
+        <AudioPlayer book={selectedBook} onClose={closePlayer} />
       )}
     </div>
   );

@@ -7,6 +7,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
+import { PhoneNumberModal } from "./components/PhoneNumberModal";
+import { ContentStatusGuard } from "./components/ContentStatusGuard";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -17,6 +20,7 @@ function ScrollToTop() {
 }
 import Index from "./pages/Index";
 import Library from "./pages/Library";
+import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,13 +31,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/library" element={<Library />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <SubscriptionProvider>
+          <ScrollToTop />
+          <ContentStatusGuard>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/library" element={<Library />} />
+              <Route path="/account" element={<Account />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ContentStatusGuard>
+          <PhoneNumberModal />
+        </SubscriptionProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

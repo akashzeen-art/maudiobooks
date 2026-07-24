@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { audiobooks } from "../data/audiobooks";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { AudioPlayer } from "./AudioPlayer";
+import { AudioDurationLabel } from "./AudioDurationLabel";
+import { useGatedPlay } from "../hooks/useGatedPlay";
 
 export function Trending() {
-  const [selectedBook, setSelectedBook] = useState<typeof audiobooks[0] | null>(null);
+  const { selectedBook, playBook, closePlayer } = useGatedPlay();
   // Shuffle once per page load, keep stable during component lifecycle.
   const trendingBooks = useMemo(() => [...audiobooks].sort(() => Math.random() - 0.5), []);
   const doubled = [...trendingBooks, ...trendingBooks];
@@ -50,7 +52,7 @@ export function Trending() {
             <motion.div
               key={`trending-${idx}`}
               className="flex-shrink-0 w-44 group cursor-pointer"
-              onClick={() => setSelectedBook(book)}
+              onClick={() => void playBook(book)}
               whileHover={{ scale: 1.05, y: -5 }}
             >
               <div className="relative overflow-hidden rounded-xl shadow-2xl">
@@ -67,9 +69,11 @@ export function Trending() {
                     <div>
                       <p className="text-white font-grotesk font-bold text-xs line-clamp-2">{book.title}</p>
                       <p className="text-gray-300 font-poppins text-xs mt-0.5">{book.author}</p>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-neon-blue font-poppins text-xs">{book.duration}</span>
-                        <span className="text-yellow-400 text-xs">⭐ {book.rating}</span>
+                      <div className="flex items-center mt-1">
+                        <AudioDurationLabel
+                          src={book.audio}
+                          className="text-neon-blue font-poppins text-xs"
+                        />
                       </div>
                     </div>
                   </div>
@@ -81,7 +85,7 @@ export function Trending() {
       </div>
 
       {selectedBook && (
-        <AudioPlayer book={selectedBook} onClose={() => setSelectedBook(null)} />
+        <AudioPlayer book={selectedBook} onClose={closePlayer} />
       )}
     </section>
   );

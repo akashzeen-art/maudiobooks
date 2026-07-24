@@ -6,10 +6,11 @@ import { Hero } from "../components/Hero";
 import { FeaturedBooks } from "../components/FeaturedBooks";
 import { Categories } from "../components/Categories";
 import { Trending } from "../components/Trending";
-import { Testimonials } from "../components/Testimonials";
+import { BookGridSection } from "../components/BookGridSection";
 import { Footer } from "../components/Footer";
+import { travelAdventureBooks, homeWellnessBooks } from "../data/cdnAudiobooks";
 
-const SEEN_KEY = "GlobalAudio_preloader_seen";
+const SEEN_KEY = "maudiobooks_preloader_seen";
 
 export default function Index() {
   const [showPreloader, setShowPreloader] = useState(() => {
@@ -37,7 +38,20 @@ export default function Index() {
           <FeaturedBooks />
           <Categories />
           <Trending />
-          <Testimonials />
+          <BookGridSection
+            titleLine1="Travel &"
+            titleLine2="Adventure"
+            subtitle="Explore backpacking, culture guides, and journeys around the world"
+            books={travelAdventureBooks}
+            accent="purple"
+          />
+          <BookGridSection
+            titleLine1="Home &"
+            titleLine2="Wellness"
+            subtitle="Declutter, heal, and build a healthier lifestyle at home"
+            books={homeWellnessBooks}
+            accent="pink"
+          />
           <Footer />
         </div>
       )}

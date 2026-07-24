@@ -10,6 +10,7 @@ export function Navbar() {
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Library", href: "/library" },
+    { label: "My Account", href: "/account" },
   ];
 
   return (
@@ -28,7 +29,7 @@ export function Navbar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <img src="/37.png" alt="GlobalAudio" className="h-10 w-auto" />
+              <img src="/logo.png" alt="maudiobooks" className="h-10 w-auto" />
             </motion.div>
           </Link>
 

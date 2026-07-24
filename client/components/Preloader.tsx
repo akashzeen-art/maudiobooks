@@ -141,8 +141,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
               transition={{ delay: 0.3, duration: 0.8 }}
             >
               <motion.img
-                src="/37.png"
-                alt="AudioVerse"
+                src="/logo.png"
+                alt="maudiobooks"
                 className="h-16 w-auto mx-auto"
                 animate={phase === "reveal" ? { scale: [1, 1.06, 1] } : {}}
                 transition={{ duration: 0.5 }}
